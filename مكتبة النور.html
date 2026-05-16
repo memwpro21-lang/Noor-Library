@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة النور الرقمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-deepest: #0a1628;
+            --primary-dark: #0f1f35;
+            --primary: #162d4a;
+            --primary-light: #1e3a5f;
+            --accent: #c9a84c;
+            --accent-hover: #d4b76a;
+            --accent-dark: #b8943f;
+            --accent-tint: rgba(201, 168, 76, 0.12);
+            --accent-glow: rgba(201, 168, 76, 0.3);
+            --bg: #f8f5ed;
+            --bg-alt: #f0ece1;
+            --card: #ffffff;
+            --text-primary: #0a1628;
+            --text-secondary: #3d4f65;
+            --text-muted: #7a8a9e;
+            --border: #e5e1d6;
+            --shadow-sm: 0 2px 8px rgba(10, 22, 40, 0.06);
+            --shadow-md: 0 8px 30px rgba(10, 22, 40, 0.08);
+            --shadow-lg: 0 20px 60px rgba(10, 22, 40, 0.12);
+            --shadow-xl: 0 30px 80px rgba(10, 22, 40, 0.16);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed; top: 0; right: 0; left: 0; z-index: 1000;
+            padding: 18px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .navbar.scrolled {
+            background: rgba(10, 22, 40, 0.96);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 12px 0;
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.25);
+        }
+        .nav-container {
+            max-width: 1280px; margin: 0 auto; padding: 0 32px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: #fff; flex-shrink: 0;
+        }
+        .nav-logo-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: var(--primary-deepest);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        .nav-logo-text { font-size: 18px; font-weight: 700; }
+        .nav-logo-text span { color: var(--accent); }
+
+        .nav-links {
+            display: flex; align-items: center; gap: 4px; list-style: none;
+            position: absolute; left: 50%; transform: translateX(-50%);
+        }
+        .nav-links a {
+            color: rgba(255,255,255,0.75); text-decoration: none;
+            padding: 8px 18px; border-radius: 10px; font-size: 14.5px; font-weight: 500;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-links a.active { color: var(--accent); }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover)) !important;
+            color: var(--primary-deepest) !important; font-weight: 600 !important;
+            padding: 10px 24px !important; border-radius: 12px !important;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            text-decoration: none; font-size: 14.5px; flex-shrink: 0;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 25px var(--accent-glow); }
+
+        .mobile-toggle {
+            display: none; background: none; border: none; color: #fff;
+            font-size: 24px; cursor: pointer; padding: 8px;
+        }
+        .mobile-menu {
+            display: none; position: fixed; top: 0; right: 0; bottom: 0;
+            width: 300px; background: var(--primary-dark);
+            z-index: 1100; padding: 80px 32px 32px;
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.3);
+        }
+        .mobile-menu.open { transform: translateX(0); display: block; }
+        .mobile-menu a {
+            display: block; color: rgba(255,255,255,0.8); text-decoration: none;
+            padding: 14px 0; font-size: 16px; font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.06); transition: all 0.3s;
+        }
+        .mobile-menu a:hover { color: var(--accent); padding-right: 10px; }
+        .mobile-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 1050; opacity: 0; transition: opacity 0.3s;
+        }
+        .mobile-overlay.open { display: block; opacity: 1; }
+        .mobile-close {
+            position: absolute; top: 24px; left: 24px;
+            background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(160deg, var(--primary-deepest) 0%, var(--primary) 40%, var(--primary-light) 70%, var(--primary-dark) 100%);
+            position: relative; overflow: hidden; padding: 120px 32px 80px;
+        }
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+        }
+        .hero-shape {
+            position: absolute; border-radius: 50%;
+            border: 1.5px solid rgba(201, 168, 76, 0.12);
+            animation: heroFloat 25s infinite ease-in-out;
+        }
+        .hero-shape.square { border-radius: 16px; }
+        .hs-1 { width: 350px; height: 350px; top: -80px; left: -80px; }
+        .hs-2 { width: 250px; height: 250px; bottom: -40px; right: -60px; animation-delay: -7s; border-color: rgba(201, 168, 76, 0.08); }
+        .hs-3 { width: 180px; height: 180px; top: 30%; right: 10%; animation-delay: -12s; }
+        .hs-4 { width: 120px; height: 120px; bottom: 20%; left: 15%; animation-delay: -4s; border-color: rgba(201, 168, 76, 0.18); }
+        .hs-5 { width: 80px; height: 80px; top: 15%; left: 30%; animation-delay: -18s; }
+        .hs-6 { width: 200px; height: 200px; bottom: 10%; right: 30%; animation-delay: -10s; border-radius: 20px; border-color: rgba(201, 168, 76, 0.06); }
+        .hero-glow {
+            position: absolute; width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            opacity: 0.15; animation: heroGlow 8s infinite ease-in-out;
+        }
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(5deg); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+            75% { transform: translateY(-40px) rotate(2deg); }
+        }
+        @keyframes heroGlow {
+            0%, 100% { opacity: 0.12; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.22; transform: translate(-50%, -50%) scale(1.15); }
+        }
+        .hero-content { text-align: center; max-width: 800px; position: relative; z-index: 2; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--accent-tint); border: 1px solid rgba(201,168,76,0.2);
+            padding: 8px 22px; border-radius: 50px; margin-bottom: 28px;
+            font-size: 13.5px; color: var(--accent-hover); font-weight: 500;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        .hero-badge i { font-size: 12px; }
+        .hero-title {
+            font-size: clamp(36px, 6vw, 62px); font-weight: 900; color: #fff;
+            line-height: 1.2; margin-bottom: 24px; letter-spacing: -1px;
+            animation: fadeInUp 0.8s ease-out 0.15s both;
+        }
+        .hero-title .gold {
+            background: linear-gradient(135deg, var(--accent) 0%, #e8d48b 50%, var(--accent) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; animation: shimmer 4s infinite ease-in-out;
+        }
+        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .hero-desc {
+            font-size: clamp(16px, 2vw, 19px); color: rgba(255,255,255,0.6);
+            max-width: 600px; margin: 0 auto 40px; line-height: 1.8; font-weight: 300;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+        .hero-buttons {
+            display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.45s both;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 14px 32px; border-radius: 14px; font-size: 15px;
+            font-weight: 600; text-decoration: none; border: none; cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Cairo', sans-serif;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: var(--primary-deepest); box-shadow: 0 6px 25px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(201, 168, 76, 0.4); }
+        .btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.2); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-tint); }
+        .hero-scroll {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.3); font-size: 14px; text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+        .hero-scroll i { display: block; margin-top: 8px; animation: scrollBounce 2s infinite; }
+        @keyframes scrollBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+        /* ===== SECTIONS ===== */
+        .section { padding: 50px 32px; }
+        .section-dark { background: var(--primary-dark); color: #fff; }
+        .section-alt { background: var(--bg-alt); }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+        }
+        .section-label i { font-size: 10px; }
+        .section-title {
+            font-size: clamp(26px, 3.5vw, 36px); font-weight: 800;
+            line-height: 1.3; margin-bottom: 12px; letter-spacing: -0.5px;
+        }
+        .section-dark .section-title { color: #fff; }
+        .section-subtitle {
+            font-size: 15px; color: var(--text-secondary); max-width: 520px;
+            margin: 0 auto; line-height: 1.8;
+        }
+        .section-dark .section-subtitle { color: rgba(255,255,255,0.55); }
+        .section-line {
+            width: 50px; height: 3px; border-radius: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            margin: 14px auto 0;
+        }
+
+        /* ===== ABOUT ===== */
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            align-items: center;
+        }
+        .about-visual { position: relative; }
+        .about-image-wrapper {
+            position: relative; border-radius: var(--radius-md); overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .about-image-wrapper img {
+            width: 100%; height: 280px; object-fit: cover; display: block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .about-image-wrapper:hover img { transform: scale(1.04); }
+        .about-image-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10, 22, 40, 0.5) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .about-image-badge {
+            position: absolute; bottom: 16px; right: 16px;
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px; padding: 12px 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .about-image-badge-icon {
+            width: 36px; height: 36px; border-radius: 9px;
+            background: var(--accent); display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: var(--primary-deepest);
+        }
+        .about-image-badge-text { color: #fff; }
+        .about-image-badge-text strong { display: block; font-size: 18px; font-weight: 800; line-height: 1.2; }
+        .about-image-badge-text span { font-size: 11px; opacity: 0.7; }
+        .about-corner-deco {
+            position: absolute; top: -8px; left: -8px;
+            width: 50px; height: 50px; border-top: 3px solid var(--accent);
+            border-left: 3px solid var(--accent); border-radius: 8px 0 0 0;
+            pointer-events: none;
+        }
+        .about-text h2 { font-size: 26px; font-weight: 800; margin-bottom: 14px; line-height: 1.3; }
+        .about-text h2 span { color: var(--accent); }
+        .about-text p { color: var(--text-secondary); font-size: 14.5px; line-height: 1.85; margin-bottom: 10px; }
+        .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+        .about-feature {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13.5px; font-weight: 600; color: var(--text-primary);
+        }
+        .about-feature i {
+            width: 28px; height: 28px; border-radius: 7px;
+            background: var(--accent-tint); color: var(--accent);
+            display: flex; align-items: center; justify-content: center; font-size: 11px;
+        }
+
+        /* ===== SERVICES ===== */
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .service-card {
+            background: var(--card); border-radius: 12px;
+            padding: 26px 22px; border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+        }
+        .service-card::before {
+            content: ''; position: absolute; top: 0; right: 0; left: 0;
+            height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            transform: scaleX(0); transform-origin: right; transition: transform 0.4s;
+        }
+        .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: transparent; }
+        .service-card:hover::before { transform: scaleX(1); }
+        .service-icon {
+            width: 46px; height: 46px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-tint), rgba(201,168,76,0.05));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--accent); margin-bottom: 14px; transition: all 0.4s;
+        }
+        .service-card:hover .service-icon {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: var(--primary-deepest); box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .service-card h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+        .service-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.75; }
+
+        /* ===== WORKS ===== */
+        .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .work-card {
+            background: var(--card); border-radius: 12px;
+            overflow: hidden; border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none; color: inherit; display: block;
+        }
+        .work-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: transparent; }
+        .work-cover {
+            position: relative; height: 180px; overflow: hidden;
+            background: linear-gradient(145deg, var(--cv1), var(--cv2));
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .work-cover::before {
+            content: ''; position: absolute; inset: 0; opacity: 0.06;
+            background-image: var(--cvp); background-size: var(--cvps, auto);
+        }
+        .work-cover::after {
+            content: ''; position: absolute;
+            top: 10px; right: 10px; bottom: 10px; left: 10px;
+            border: 1.5px solid rgba(201, 168, 76, 0.2); border-radius: 4px;
+            pointer-events: none;
+        }
+        .work-cover-deco {
+            position: absolute; width: 60px; height: 60px; border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.1); top: -15px; left: -15px;
+        }
+        .work-cover-deco2 {
+            position: absolute; width: 45px; height: 45px; border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.08); bottom: -10px; right: -10px;
+        }
+        .work-cover-icon {
+            font-size: 28px; color: var(--cvc, var(--accent));
+            margin-bottom: 10px; position: relative; z-index: 1;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .work-cover-line {
+            width: 40px; height: 1.5px; background: var(--cvc, var(--accent));
+            border-radius: 1px; margin-bottom: 8px; opacity: 0.6; position: relative; z-index: 1;
+        }
+        .work-cover-cat {
+            font-size: 10px; font-weight: 700; color: var(--cvc, var(--accent));
+            letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.7;
+            position: relative; z-index: 1;
+        }
+        .work-cover-dept {
+            position: absolute; bottom: 14px;
+            font-size: 9px; color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 1px; z-index: 1;
+        }
+        .work-overlay {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: rgba(10, 22, 40, 0.55); opacity: 0; transition: all 0.4s; z-index: 2;
+        }
+        .work-card:hover .work-overlay { opacity: 1; }
+        .work-overlay-btn {
+            padding: 10px 22px; border-radius: 10px;
+            background: var(--accent); color: var(--primary-deepest);
+            font-weight: 700; font-size: 13px; border: none;
+            transform: translateY(12px); transition: all 0.4s; font-family: 'Cairo', sans-serif;
+            display: flex; align-items: center; gap: 7px; z-index: 3; pointer-events: none;
+        }
+        .work-card:hover .work-overlay-btn { transform: translateY(0); }
+        .work-info { padding: 16px 18px; }
+        .work-info h3 { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; line-height: 1.6; }
+        .work-info p { font-size: 12px; color: var(--text-muted); }
+        .work-meta {
+            display: flex; align-items: center; gap: 14px; margin-top: 10px;
+            padding-top: 10px; border-top: 1px solid var(--border);
+            font-size: 11.5px; color: var(--text-muted);
+        }
+        .work-meta span { display: flex; align-items: center; gap: 4px; }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;
+        }
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-size: clamp(28px, 3.5vw, 40px); font-weight: 900; color: var(--accent);
+            line-height: 1; margin-bottom: 6px;
+        }
+        .stat-label { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
+        .stat-divider { width: 32px; height: 2px; background: rgba(201,168,76,0.3); margin: 10px auto 0; border-radius: 1px; }
+
+        /* ===== FEATURES ===== */
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .feature-card {
+            background: var(--card); border-radius: 12px;
+            padding: 24px 20px; border: 1px solid var(--border);
+            text-align: center; transition: all 0.4s;
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+        .feature-icon {
+            width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 14px;
+            background: var(--accent-tint);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: var(--accent); transition: all 0.4s;
+        }
+        .feature-card:hover .feature-icon {
+            background: var(--accent); color: var(--primary-deepest);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.75; }
+
+        /* ===== CONTACT ===== */
+        .contact-wrapper { max-width: 680px; margin: 0 auto; text-align: center; }
+        .contact-wrapper .section-label { justify-content: center; }
+        .contact-wrapper h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; color: #fff; }
+        .contact-wrapper > p {
+            color: rgba(255,255,255,0.5); font-size: 14.5px; line-height: 1.85;
+            margin-bottom: 32px; max-width: 440px; margin-left: auto; margin-right: auto;
+        }
+        .contact-links {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            max-width: 480px; margin: 0 auto;
+        }
+        .contact-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 18px 20px; border-radius: 12px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            text-decoration: none; color: #fff; transition: all 0.35s;
+        }
+        .contact-link:hover {
+            background: var(--accent-tint); border-color: rgba(201,168,76,0.25);
+            transform: translateY(-3px);
+        }
+        .contact-link-icon {
+            width: 44px; height: 44px; border-radius: 11px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+        }
+        .contact-link-icon.tg { background: rgba(0,136,204,0.12); color: #0088cc; }
+        .contact-link-icon.ig { background: rgba(225,48,108,0.12); color: #e1306c; }
+        .contact-link-text { font-size: 13.5px; text-align: right; flex: 1; min-width: 0; }
+        .contact-link-text small { display: block; font-size: 11px; color: rgba(255,255,255,0.35); margin-bottom: 2px; font-weight: 500; }
+        .contact-link-arrow {
+            color: rgba(255,255,255,0.15); font-size: 12px; transition: all 0.3s; flex-shrink: 0;
+        }
+        .contact-link:hover .contact-link-arrow { color: var(--accent); transform: translateX(-4px); }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--primary-deepest); padding: 48px 32px 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .footer-top {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-nav { display: flex; align-items: center; gap: 24px; }
+        .footer-nav a {
+            color: rgba(255,255,255,0.35); text-decoration: none;
+            font-size: 13px; transition: color 0.25s;
+        }
+        .footer-nav a:hover { color: var(--accent); }
+        .footer-socials { display: flex; gap: 8px; }
+        .footer-social {
+            width: 36px; height: 36px; border-radius: 9px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.45); text-decoration: none; font-size: 14px;
+            transition: all 0.3s;
+        }
+        .footer-social:hover { background: var(--accent); color: var(--primary-deepest); border-color: var(--accent); }
+        .footer-bottom {
+            max-width: 1200px; margin: 0 auto; padding-top: 20px;
+            text-align: center; font-size: 12px; color: rgba(255,255,255,0.2);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { opacity: 0; transform: translateY(35px); transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform, opacity; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.08s; }
+        .reveal-delay-2 { transition-delay: 0.16s; }
+        .reveal-delay-3 { transition-delay: 0.24s; }
+        .reveal-delay-4 { transition-delay: 0.32s; }
+        .reveal-delay-5 { transition-delay: 0.4s; }
+
+        /* Performance / UX: reduce motion if requested */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal { transition: none; }
+            .hero-shape, .hero-glow { animation: none !important; }
+            .hero-title .gold { animation: none !important; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .services-grid, .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .works-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+            .about-grid { grid-template-columns: 1fr; gap: 30px; }
+            .about-image-wrapper img { height: 240px; }
+            .footer-top { flex-direction: column; gap: 20px; text-align: center; }
+            .footer-nav { flex-wrap: wrap; justify-content: center; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .section { padding: 60px 18px; }
+            .services-grid, .works-grid, .features-grid { grid-template-columns: 1fr; }
+            .about-features { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .hero { padding: 100px 18px 60px; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 280px; justify-content: center; }
+            .contact-links { grid-template-columns: 1fr; max-width: 340px; }
+            .about-image-wrapper img { height: 200px; }
+            .footer-nav { gap: 14px; }
+        }
+        @media (max-width: 480px) {
+            .stat-number { font-size: 24px; }
+            .stat-label { font-size: 11.5px; }
+            .about-corner-deco { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <div class="nav-logo-icon"><i class="fas fa-book-open"></i></div>
+                <div class="nav-logo-text">مكتبة <span>النور</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero" class="active">الرئيسية</a></li>
+                <li><a href="#about">من نحن</a></li>
+                <li><a href="#services">خدماتنا</a></li>
+                <li><a href="#works">أعمالنا</a></li>
+                <li><a href="#contact">تواصل معنا</a></li>
+            </ul>
+            <a href="https://t.me/report_30" target="_blank" class="nav-cta">اطلب الآن</a>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-close" id="mobileClose"><i class="fas fa-times"></i></button>
+        <a href="#hero">الرئيسية</a>
+        <a href="#about">من نحن</a>
+        <a href="#services">خدماتنا</a>
+        <a href="#works">أعمالنا</a>
+        <a href="#contact">تواصل معنا</a>
+        <a href="https://t.me/report_30" target="_blank" style="color: var(--accent);">اطلب الآن</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-shape hs-1"></div>
+        <div class="hero-shape hs-2"></div>
+        <div class="hero-shape hs-3"></div>
+        <div class="hero-shape hs-4"></div>
+        <div class="hero-shape hs-5"></div>
+        <div class="hero-shape hs-6 square"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                مكتبة إلكترونية متخصصة في الخدمات الأكاديمية
+            </div>
+            <h1 class="hero-title">
+                مكتبة <span class="gold">النور</span> الرقمية
+            </h1>
+            <p class="hero-desc">
+                نُقدّم لكم خدمات أكاديمية احترافية بإدارة كادر متخصص من المبرمجين والمصممين والكاتبين، لنضمن لكم أعلى جودة في إعداد البحوث والرسائل العلمية
+            </p>
+            <div class="hero-buttons">
+                <a href="#works" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> تصفح أعمالنا
+                </a>
+                <a href="#services" class="btn btn-outline">
+                    <i class="fas fa-cog"></i> تعرّف على خدماتنا
+                </a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            اكتشف المزيد
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-visual reveal">
+                    <div class="about-corner-deco"></div>
+                    <div class="about-image-wrapper">
+                        <img src="Screenshot 2026-05-17 014030.png" alt="مكتبة احترافية" loading="lazy">
+                        <div class="about-image-overlay"></div>
+                        <div class="about-image-badge">
+                            <div class="about-image-badge-icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="about-image-badge-text">
+                                <strong>+452</strong>
+                                <span>عمل أكاديمي منجز</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <div class="section-label reveal"><i class="fas fa-circle"></i> من نحن</div>
+                    <h2 class="reveal reveal-delay-1">نصنع لك مستقبلاً <span>أكاديمياً</span> متميزاً</h2>
+                    <p class="reveal reveal-delay-2">
+                        مكتبة النور الرقمية هي مكتبة إلكترونية متخصصة تقدم خدمات أكاديمية شاملة ومتكاملة. نعمل بفريق من المبرمجين والمصممين والكاتبين المحترفين لتقديم حلول أكاديمية مبتكرة وعالية الجودة.
+                    </p>
+                    <p class="reveal reveal-delay-2">
+                        نؤمن بأن كل بحث أو رسالة علمية تستحق أن تُقدّم بأفضل صورة، لذلك نحرص على الدقة والاحترافية في كل تفصيلة.
+                    </p>
+                    <div class="about-features reveal reveal-delay-3">
+                        <div class="about-feature"><i class="fas fa-check"></i> كادر متخصص</div>
+                        <div class="about-feature"><i class="fas fa-check"></i> جودة عالية</div>
+                        <div class="about-feature"><i class="fas fa-check"></i> التزام بالمواعيد</div>
+                        <div class="about-feature"><i class="fas fa-check"></i> أسعار تنافسية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section section-alt" id="services">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label reveal"><i class="fas fa-circle"></i> خدماتنا</div>
+                <h2 class="section-title reveal reveal-delay-1">خدمات أكاديمية <span style="color: var(--accent)">شاملة</span></h2>
+                <p class="section-subtitle reveal reveal-delay-2">نقدم مجموعة متكاملة من الخدمات الأكاديمية بأعلى معايير الجودة</p>
+                <div class="section-line reveal reveal-delay-2"></div>
+            </div>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="service-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3>أطروحات الدكتوراه</h3>
+                    <p>إعداد وتنسيق أطروحات الدكتوراه بأعلى المعايير الأكاديمية مع مراجعة شاملة للمحتوى العلمي</p>
+                </div>
+                <div class="service-card reveal reveal-delay-1">
+                    <div class="service-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3>رسائل الماجستير</h3>
+                    <p>كتابة وتنسيق رسائل الماجستير بدقة واحترافية مع الالتزام بالمعايير الجامعية المعتمدة</p>
+                </div>
+                <div class="service-card reveal reveal-delay-2">
+                    <div class="service-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3>بحوث التخرج</h3>
+                    <p>إعداد بحوث التخرج الجامعية بجودة عالية تشمل البحث والتحليل والتنسيق الأكاديمي</p>
+                </div>
+                <div class="service-card reveal reveal-delay-3">
+                    <div class="service-icon"><i class="fas fa-edit"></i></div>
+                    <h3>التعديل والتنضيد</h3>
+                    <p>تعديل لغوي وأكاديمي متقن مع تنضيد احترافي للرسائل والأبحاث وفقاً للأنماط المعتمدة</p>
+                </div>
+                <div class="service-card reveal reveal-delay-4">
+                    <div class="service-icon"><i class="fas fa-code"></i></div>
+                    <h3>مشاريع التخرج البرمجية</h3>
+                    <p>تصميم وتطوير مشاريع تخرج عملية متكاملة بأنظمة حديثة مع التوثيق الكامل</p>
+                </div>
+                <div class="service-card reveal reveal-delay-5">
+                    <div class="service-icon"><i class="fas fa-palette"></i></div>
+                    <h3>التصميم</h3>
+                    <p>تصميم أغلفة وأشكال ورسوم بيانية للأبحاث والرسائل وبطاقات دعوة بأسلوب عصري واحترافي</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKS -->
+    <section class="section" id="works">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label reveal"><i class="fas fa-circle"></i> أعمالنا</div>
+                <h2 class="section-title reveal reveal-delay-1">نماذج من <span style="color: var(--accent)">أعمالنا</span></h2>
+                <p class="section-subtitle reveal reveal-delay-2">اطّلع على نماذج من الأعمال الأكاديمية التي أنجزناها بنجاح</p>
+                <div class="section-line reveal reveal-delay-2"></div>
+            </div>
+            <div class="works-grid" id="worksGrid"></div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section section-dark" id="stats">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label reveal" style="color: var(--accent);"><i class="fas fa-circle"></i> إنجازاتنا</div>
+                <h2 class="section-title reveal reveal-delay-1">أرقام تتحدث عنّا</h2>
+                <div class="section-line reveal reveal-delay-1"></div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <div class="stat-number" data-target="367" data-suffix="+">0</div>
+                    <div class="stat-label">بحث تخرج</div>
+                    <div class="stat-divider"></div>
+                </div>
+                <div class="stat-item reveal reveal-delay-1">
+                    <div class="stat-number" data-target="30" data-suffix="">0</div>
+                    <div class="stat-label">أطروحة دكتوراه</div>
+                    <div class="stat-divider"></div>
+                </div>
+                <div class="stat-item reveal reveal-delay-2">
+                    <div class="stat-number" data-target="55" data-suffix="">0</div>
+                    <div class="stat-label">رسالة ماجستير</div>
+                    <div class="stat-divider"></div>
+                </div>
+                <div class="stat-item reveal reveal-delay-3">
+                    <div class="stat-number" data-target="100" data-suffix="%">0</div>
+                    <div class="stat-label">نسبة الرضا</div>
+                    <div class="stat-divider"></div>
+                </div>
+                <div class="stat-item reveal reveal-delay-4">
+                    <div class="stat-number" data-target="24" data-suffix="">0</div>
+                    <div class="stat-label">ساعة دعم متواصل</div>
+                    <div class="stat-divider"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label reveal"><i class="fas fa-circle"></i> لماذا نحن</div>
+                <h2 class="section-title reveal reveal-delay-1">ما يميّزنا عن <span style="color: var(--accent)">الآخرين</span></h2>
+                <p class="section-subtitle reveal reveal-delay-2">نلتزم بأعلى المعايير لضمان رضاكم التام عن كل عمل نقدمه</p>
+                <div class="section-line reveal reveal-delay-2"></div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>دقة متناهية</h3>
+                    <p>نولي اهتماماً فائقاً بأدق التفاصيل في كل عمل نقدمه لضمان أعلى جودة</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <h3>التزام بالمواعيد</h3>
+                    <p>نحترم وقتكم ونلتزم بتسليم الأعمال في الموعد المحدد دون تأخير</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>فريق متخصص</h3>
+                    <p>كادر من المبرمجين والمصممين والكاتبين ذوي الخبرة والكفاءة العالية</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon"><i class="fas fa-tags"></i></div>
+                    <h3>أسعار تنافسية</h3>
+                    <p>نقدم خدمات عالية الجودة بأسعار مناسبة ومنافسة في السوق</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-4">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>سرية تامة</h3>
+                    <p>نضمن سرية تامة لجميع الأعمال والبيانات الشخصية لعملائنا</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-5">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>دعم متواصل</h3>
+                    <p>فريق دعم فني متاح على مدار الساعة للإجابة على استفساراتكم</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section section-dark" id="contact">
+        <div class="container">
+            <div class="contact-wrapper reveal">
+                <div class="section-label" style="color: var(--accent);"><i class="fas fa-circle"></i> تواصل معنا</div>
+                <h2>نحن هنا لمساعدتك</h2>
+                <p>تواصل معنا الآن وسنرد عليك في أسرع وقت ممكن لنحوّل أفكارك إلى واقع أكاديمي متميز.</p>
+                <div class="contact-links">
+                    <a href="https://t.me/report_30" target="_blank" class="contact-link">
+                        <div class="contact-link-icon tg"><i class="fab fa-telegram-plane"></i></div>
+                        <div class="contact-link-text">
+                            <small>تواصل عبر تليجرام</small>
+                            @report_30
+                        </div>
+                        <i class="fas fa-arrow-left contact-link-arrow"></i>
+                    </a>
+                    <a href="https://www.instagram.com/report.30?igsh=aTloZHBnN20zeWg4" target="_blank" class="contact-link">
+                        <div class="contact-link-icon ig"><i class="fab fa-instagram"></i></div>
+                        <div class="contact-link-text">
+                            <small>تابعنا على انستقرام</small>
+                            @report.30
+                        </div>
+                        <i class="fas fa-arrow-left contact-link-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-top">
+            <a href="#hero" class="nav-logo" style="text-decoration:none;">
+                <div class="nav-logo-icon"><i class="fas fa-book-open"></i></div>
+                <div class="nav-logo-text">مكتبة <span>النور</span></div>
+            </a>
+            <nav class="footer-nav">
+                <a href="#hero">الرئيسية</a>
+                <a href="#about">من نحن</a>
+                <a href="#services">خدماتنا</a>
+                <a href="#works">أعمالنا</a>
+                <a href="#contact">تواصل معنا</a>
+            </nav>
+            <div class="footer-socials">
+                <a href="https://t.me/report_30" target="_blank" class="footer-social" aria-label="تليجرام"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://www.instagram.com/report.30?igsh=aTloZHBnN20zeWg4" target="_blank" class="footer-social" aria-label="انستقرام"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 مكتبة النور الرقمية — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>
+        const works = [
+            {
+                id: 1,
+                title: 'The Role Of Vit K And Vit D In Treatments Of Osteoporosis',
+                department: 'قسم الصيدلة',
+                badge: 'بحث تخرج',
+                cv1: '#0f2218', cv2: '#1a4030', cvc: '#6dd4a0',
+                cvp: 'repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(109,212,160,.04) 20px,rgba(109,212,160,.04) 21px)',
+                icon: 'fas fa-pills', pdfUrl: 'https://drive.google.com/file/d/1ERqoLwznv7OFziUZ2Hu2DAMG7vj0ef7z/view?usp=drive_link'
+            },
+            {
+                id: 2,
+                title: 'Study of Relationship between Anemia and Blood Group',
+                department: 'قسم علوم الحياة',
+                badge: 'بحث تخرج',
+                cv1: '#1f0d0d', cv2: '#3a1e1e', cvc: '#e07070',
+                cvp: 'radial-gradient(circle at 2px 2px,rgba(224,112,112,.05) 1px,transparent 1px)', cvps: '24px 24px',
+                icon: 'fas fa-tint', pdfUrl: 'https://drive.google.com/file/d/1JrbWSCEhQq_4K_1oE-4JzmkzpQ469JNC/view?usp=drive_link'
+            },
+            {
+                id: 3,
+                title: 'تأثير غسيل الكلى الدموي على ساعات النوم وجودة النوم على وظائف الكلى لدى مرضى الفشل الكلوي المزمن',
+                department: 'قسم التمريض',
+                badge: 'بحث تخرج',
+                cv1: '#0a1a2a', cv2: '#122a40', cvc: '#7ec8e3',
+                cvp: 'repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(126,200,227,.04) 18px,rgba(126,200,227,.04) 19px)',
+                icon: 'fas fa-heartbeat', pdfUrl: 'https://drive.google.com/file/d/12t7-4qk_5U3MSqnBOvQOOIzDjFMVfPD_/view?usp=drive_link'
+            },
+            {
+                id: 4,
+                title: 'دور اللغة في تعزيز التعاون العسكري التقني بين الدول',
+                department: 'معهد عالي وزارة الداخلية',
+                badge: 'بحث أكاديمي',
+                cv1: '#0d1a0d', cv2: '#1a301a', cvc: '#8aad6a',
+                cvp: 'repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(138,173,106,.04) 30px,rgba(138,173,106,.04) 31px)',
+                icon: 'fas fa-handshake', pdfUrl: 'https://drive.google.com/file/d/1FVJugLVHbZl3VRXHWdWZq51R28DkDKi8/view?usp=drive_link'
+            },
+            {
+                id: 5,
+                title: 'السياسة النقدية وأثارها في حجم الائتمان المصرفي',
+                department: 'قسم المالية والمصرفية',
+                badge: 'بحث تخرج',
+                cv1: '#0d1520', cv2: '#1a2a40', cvc: '#c9a84c',
+                cvp: 'repeating-linear-gradient(90deg,transparent,transparent 25px,rgba(201,168,76,.04) 25px,rgba(201,168,76,.04) 26px)',
+                icon: 'fas fa-chart-line', pdfUrl: 'https://drive.google.com/file/d/1mVm_pDpVX1QMzDo4lcZ09lOi4L-GaoCf/view?usp=drive_link'
+            },
+            {
+                id: 6,
+                title: 'Using Cooperative Learning to Enhance English Speaking in EFL Classrooms',
+                department: 'قسم اللغة الانكليزية',
+                badge: 'بحث تخرج',
+                cv1: '#1a0f2e', cv2: '#2d1f4e', cvc: '#c89bff',
+                cvp: 'repeating-linear-gradient(-45deg,transparent,transparent 18px,rgba(200,155,255,.04) 18px,rgba(200,155,255,.04) 19px)',
+                icon: 'fas fa-comments', pdfUrl: 'https://drive.google.com/file/d/1QDsvQ-5dfUhcIYoq7H7L6fruEeFXJkya/view?usp=drive_link'
+            }
+        ];
+
+        function renderWorks() {
+            const grid = document.getElementById('worksGrid');
+            grid.innerHTML = works.map((w, i) => `
+                <a href="${w.pdfUrl}" class="work-card reveal reveal-delay-${Math.min(i % 3 + 1, 3)}" target="_self" aria-label="فتح ملف ${w.title}">
+                    <div class="work-cover" style="--cv1:${w.cv1};--cv2:${w.cv2};--cvc:${w.cvc};--cvp:${w.cvp};${w.cvps ? '--cvps:'+w.cvps+';' : ''}">
+                        <div class="work-cover-deco"></div>
+                        <div class="work-cover-deco2"></div>
+                        <i class="${w.icon} work-cover-icon" aria-hidden="true"></i>
+                        <div class="work-cover-line"></div>
+                        <div class="work-cover-cat">${w.badge}</div>
+                        <div class="work-cover-dept">${w.department}</div>
+                        <div class="work-overlay" aria-hidden="true">
+                            <span class="work-overlay-btn">
+                                <i class="fas fa-external-link-alt" aria-hidden="true"></i> فتح الملف
+                            </span>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <h3>${w.title}</h3>
+                        <p>${w.department}</p>
+                        <div class="work-meta">
+                            <span><i class="fas fa-tag" aria-hidden="true"></i> ${w.badge}</span>
+                            <span><i class="fas fa-file-pdf" aria-hidden="true"></i> PDF</span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            // Observe only newly rendered cards (avoid global query)
+            const newCards = grid.querySelectorAll('.work-card.reveal');
+            newCards.forEach(el => revealObserver.observe(el));
+        }
+
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section[id]');
+
+        // Throttle scroll using rAF (single scroll pipeline)
+        let scrollTicking = false;
+        let latestScrollY = 0;
+
+        function onScroll() {
+            latestScrollY = window.scrollY;
+            if (scrollTicking) return;
+            scrollTicking = true;
+            requestAnimationFrame(() => {
+                scrollTicking = false;
+
+                // Navbar shadow / background
+                navbar.classList.toggle('scrolled', latestScrollY > 60);
+
+                // Active section
+                let current = '';
+                for (let i = 0; i < sections.length; i++) {
+                    const sec = sections[i];
+                    if (latestScrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+                }
+                const currentHash = '#' + current;
+                for (let i = 0; i < navLinks.length; i++) {
+                    const link = navLinks[i];
+                    link.classList.toggle('active', link.getAttribute('href') === currentHash);
+                }
+            });
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileClose = document.getElementById('mobileClose');
+        function openMobile() {
+            mobileMenu.style.display = 'block';
+            requestAnimationFrame(() => mobileMenu.classList.add('open'));
+            mobileOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobile() {
+            mobileMenu.classList.remove('open');
+            mobileOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+            setTimeout(() => { if (!mobileMenu.classList.contains('open')) mobileMenu.style.display = 'none'; }, 400);
+        }
+        mobileToggle.addEventListener('click', openMobile);
+        mobileClose.addEventListener('click', closeMobile);
+        mobileOverlay.addEventListener('click', closeMobile);
+        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i];
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            }
+        }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        let countersAnimated = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countersAnimated) { countersAnimated = true; animateCounters(); }
+            });
+        }, { threshold: 0.3 });
+        const statsSection = document.getElementById('stats');
+        if (statsSection) statsObserver.observe(statsSection);
+
+        function animateCounters() {
+            document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+                const target = parseInt(el.dataset.target);
+                const suffix = el.dataset.suffix || '';
+                const start = performance.now();
+                function update(now) {
+                    const progress = Math.min((now - start) / 2000, 1);
+                    const val = Math.floor((1 - Math.pow(1 - progress, 4)) * target);
+                    el.textContent = val + suffix;
+                    if (progress < 1) requestAnimationFrame(update);
+                }
+                requestAnimationFrame(update);
+            });
+        }
+
+        renderWorks();
+    </script>
+</body>
+</html>
